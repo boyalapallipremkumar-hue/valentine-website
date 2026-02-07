@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>💘 Will You Be My Valentine?</title>
+
+<style>
+  body {
+    margin: 0;
+    min-height: 100vh;
+    font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+    background: linear-gradient(135deg, #ffb6c1, #ffd1dc);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    overflow: hidden;
+  }
+
+  .container {
+    background: #fff;
+    padding: 28px 22px 30px;
+    border-radius: 22px;
+    box-shadow: 0 12px 35px rgba(0,0,0,0.2);
+    width: 90%;
+    max-width: 420px;
+  }
+
+  h1 {
+    margin: 0 0 10px;
+    color: #d60067;
+    font-size: 28px;
+  }
+
+  #names {
+    font-size: 22px;
+    margin-bottom: 14px;
+    color: #900040;
+    font-weight: bold;
+  }
+
+  .question {
+    font-size: 22px;
+    margin: 14px 0 20px;
+    font-weight: 700;
+    color: #d60067;
+    background: #fff0f5;
+    padding: 10px 14px;
+    border-radius: 12px;
+    display: inline-block;
+  }
+
+  .buttons {
+    display: flex;
+    gap: 12px;
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+
+  .buttons button {
+    padding: 14px 22px;
+    border: none;
+    border-radius: 14px;
+    font-size: 18px;
+    cursor: pointer;
+    font-weight: bold;
+  }
+
+  #yes {
+    background: #ff2f7a;
+    color: #fff;
+  }
+
+  #no {
+    background: #ddd;
+    color: #000;
+    position: relative;
+  }
+
+  #result {
+    margin-top: 18px;
+    font-size: 22px;
+    color: #d60067;
+    font-weight: bold;
+    display: none;
+  }
+</style>
+</head>
+
+<body>
+
+<div class="container">
+  <h1>💘 Happy Valentine’s Day! 💘</h1>
+  <div id="names"></div>
+
+  <div class="question" id="questionText"></div>
+
+  <div class="buttons">
+    <button id="yes">Yes 😍</button>
+    <button id="no">No 🙈</button>
+  </div>
+
+  <div id="result">Yay! 💕 I knew you would say YES! 🎉💖</div>
+</div>
+
+<script>
+  // 🔴 HARDCODED NAMES (edit these if needed)
+  const name1 = "Prem";
+  const name2 = "My Wifey ❤️";
+
+  // Show both names
+  document.getElementById("names").innerText = name1 + " ❤️ " + name2;
+
+  // Highlighted question with only valentine name
+  const questionEl = document.getElementById("questionText");
+  questionEl.innerText = name2 + ", will you be my Valentine? 💞";
+
+  // No button escape + changing text
+  const noBtn = document.getElementById("no");
+  const noTexts = [
+    "No 🙈",
+    "Are you sure? 😢",
+    "Please? 🥺",
+    "Think again 😳",
+    "Don’t break my heart 💔",
+    "Pretty please? 🥹",
+    "Give me a chance 💖",
+    "Just say yes 😅"
+  ];
+  let noIndex = 0;
+
+  function moveNo() {
+    const x = Math.random() * (window.innerWidth - 140);
+    const y = Math.random() * (window.innerHeight - 80);
+    noBtn.style.position = "fixed";
+    noBtn.style.left = x + "px";
+    noBtn.style.top = y + "px";
+
+    noIndex = (noIndex + 1) % noTexts.length;
+    noBtn.textContent = noTexts[noIndex];
+  }
+
+  // Desktop + mobile support
+  noBtn.addEventListener("mouseenter", moveNo);
+  noBtn.addEventListener("click", moveNo);
+
+  // Yes button
+  const yesBtn = document.getElementById("yes");
+  const result = document.getElementById("result");
+
+  yesBtn.addEventListener("click", function() {
+    result.style.display = "block";
+  });
+</script>
+
+</body>
+</html>
