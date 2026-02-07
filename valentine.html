@@ -9,7 +9,7 @@
   body {
     margin: 0;
     min-height: 100vh;
-    font-family: Arial, sans-serif;
+    font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
     background: linear-gradient(135deg, #ffb6c1, #ffd1dc);
     display: flex;
     align-items: center;
@@ -35,14 +35,20 @@
 
   #names {
     font-size: 22px;
-    margin-bottom: 12px;
+    margin-bottom: 14px;
     color: #900040;
     font-weight: bold;
   }
 
   .question {
-    font-size: 20px;
-    margin: 14px 0 18px;
+    font-size: 22px;
+    margin: 14px 0 20px;
+    font-weight: 700;
+    color: #d60067;
+    background: #fff0f5;
+    padding: 10px 14px;
+    border-radius: 12px;
+    display: inline-block;
   }
 
   .buttons {
@@ -88,7 +94,7 @@
   <h1>💘 Happy Valentine’s Day! 💘</h1>
   <div id="names"></div>
 
-  <div class="question">Will you be my Valentine? 💞</div>
+  <div class="question" id="questionText"></div>
 
   <div class="buttons">
     <button id="yes">Yes 😍</button>
@@ -99,12 +105,20 @@
 </div>
 
 <script>
-  // Read URL params
+  // Read URL params: ?name=Prem&valentineName=Samhitha
   const params = new URLSearchParams(window.location.search);
   const name1 = params.get("name") || "Someone";
   const name2 = params.get("valentineName") || "You";
 
-  document.getElementById("names").innerText = decodeURIComponent(name1) + " ❤️ " + decodeURIComponent(name2);
+  const decodedName1 = decodeURIComponent(name1);
+  const decodedName2 = decodeURIComponent(name2);
+
+  // Show both names on top
+  document.getElementById("names").innerText = decodedName1 + " ❤️ " + decodedName2;
+
+  // Highlighted question with only valentine name
+  const questionEl = document.getElementById("questionText");
+  questionEl.innerText = decodedName2 + ", will you be my Valentine? 💞";
 
   // No button escape + changing text
   const noBtn = document.getElementById("no");
@@ -131,8 +145,9 @@
     noBtn.textContent = noTexts[noIndex];
   }
 
+  // Desktop + mobile support
   noBtn.addEventListener("mouseenter", moveNo);
-  noBtn.addEventListener("click", moveNo);      // For mobile
+  noBtn.addEventListener("click", moveNo);
 
   // Yes button
   const yesBtn = document.getElementById("yes");
