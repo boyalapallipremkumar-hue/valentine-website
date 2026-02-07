@@ -113,4 +113,182 @@
   .heart {
     position: fixed;
     bottom: -40px;
-    font-siz
+    font-size: 20px;
+    opacity: 0.9;
+    animation: float 8s linear forwards;
+    pointer-events: none;
+    z-index: 998;
+  }
+  @keyframes float {
+    0% { transform: translateY(0) translateX(0); opacity: 0; }
+    10% { opacity: .9; }
+    100% { transform: translateY(-110vh) translateX(40px); opacity: 0; }
+  }
+
+  /* Fireworks */
+  .firework {
+    position: fixed;
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    pointer-events: none;
+    animation: explode 900ms ease-out forwards;
+    z-index: 1000;
+  }
+  @keyframes explode {
+    from { transform: translate(0,0) scale(1); opacity: 1; }
+    to   { transform: translate(var(--dx), var(--dy)) scale(0.8); opacity: 0; }
+  }
+</style>
+</head>
+
+<body>
+
+<div class="container" id="card">
+  <h1>💘 Happy Valentine’s Day! 💘</h1>
+  <div id="names"></div>
+
+  <div class="question" id="questionText"></div>
+
+  <div class="buttons">
+    <button id="yes">Yes 😍</button>
+    <button id="no">No 🙈</button>
+  </div>
+
+  <div id="result">Yay! 💕 I knew you would say YES! 🎉💖</div>
+</div>
+
+<!-- Background music (royalty-free) -->
+<audio id="bgm" loop>
+  <source src="https://cdn.pixabay.com/download/audio/2022/10/03/audio_1c1a8b6b2e.mp3?filename=romantic-ambient-121245.mp3" type="audio/mpeg">
+</audio>
+
+<script>
+  // 🔴 HARDCODED NAMES (edit these if needed)
+  const name1 = "Prem";
+  const name2 = "My Wifey ❤️";
+
+  // Show both names
+  document.getElementById("names").innerText = name1 + " ❤️ " + name2;
+
+  // Highlighted question with only valentine name
+  const questionEl = document.getElementById("questionText");
+  questionEl.innerText = name2 + ", will you be my Valentine? 💞";
+
+  // No button escape + changing text
+  const noBtn = document.getElementById("no");
+  const noTexts = [
+    "No 🙈",
+    "Are you sure? 😢",
+    "Please? 🥺",
+    "Think again 😳",
+    "Don’t break my heart 💔",
+    "Pretty please? 🥹",
+    "Give me a chance 💖",
+    "Just say yes 😅"
+  ];
+  let noIndex = 0;
+
+  function moveNo() {
+    const x = Math.random() * (window.innerWidth - 140);
+    const y = Math.random() * (window.innerHeight - 80);
+    noBtn.style.position = "fixed";
+    noBtn.style.left = x + "px";
+    noBtn.style.top = y + "px";
+
+    noIndex = (noIndex + 1) % noTexts.length;
+    noBtn.textContent = noTexts[noIndex];
+  }
+  noBtn.addEventListener("mouseenter", moveNo);
+  noBtn.addEventListener("click", moveNo);
+
+  // Yes button enhancements
+  const yesBtn = document.getElementById("yes");
+  const result = document.getElementById("result");
+  const card = document.getElementById("card");
+  const audio = document.getElementById("bgm");
+
+  yesBtn.addEventListener("click", function() {
+    // Show message & glow
+    result.style.display = "block";
+    card.classList.add("glow");
+
+    // Disable buttons
+    yesBtn.disabled = true;
+    noBtn.disabled = true;
+    noBtn.style.display = "none";
+
+    // Play music (user-initiated click allows autoplay)
+    audio.currentTime = 0;
+    audio.play().catch(() => {});
+
+    // Confetti + hearts
+    launchConfetti(140);
+    heartRain(30);
+
+    // Fireworks bursts
+    fireworkShow(5);
+  });
+
+  function launchConfetti(count) {
+    const colors = ["#ff2f7a","#ffd166","#06d6a0","#4cc9f0","#b5179e"];
+    for (let i = 0; i < count; i++) {
+      const c = document.createElement("div");
+      c.className = "confetti";
+      c.style.left = Math.random() * 100 + "vw";
+      c.style.background = colors[Math.floor(Math.random() * colors.length)];
+      c.style.animationDuration = (2 + Math.random() * 2) + "s";
+      document.body.appendChild(c);
+      setTimeout(() => c.remove(), 4000);
+    }
+  }
+
+  function heartRain(count) {
+    const hearts = ["💖","💘","💝","💗","💓"];
+    for (let i = 0; i < count; i++) {
+      setTimeout(() => {
+        const h = document.createElement("div");
+        h.className = "heart";
+        h.textContent = hearts[Math.floor(Math.random() * hearts.length)];
+        h.style.left = Math.random() * 100 + "vw";
+        h.style.animationDuration = (6 + Math.random() * 4) + "s";
+        h.style.fontSize = (16 + Math.random() * 24) + "px";
+        document.body.appendChild(h);
+        setTimeout(() => h.remove(), 10000);
+      }, i * 120);
+    }
+  }
+
+  function fireworkShow(bursts) {
+    const colors = ["#ff2f7a","#ffd166","#06d6a0","#4cc9f0","#b5179e","#ff7aa2"];
+    for (let b = 0; b < bursts; b++) {
+      setTimeout(() => {
+        const x = Math.random() * window.innerWidth;
+        const y = Math.random() * window.innerHeight * 0.5;
+        explodeAt(x, y, colors);
+      }, b * 600);
+    }
+  }
+
+  function explodeAt(x, y, colors) {
+    const pieces = 28;
+    for (let i = 0; i < pieces; i++) {
+      const p = document.createElement("div");
+      p.className = "firework";
+      const angle = (Math.PI * 2) * (i / pieces);
+      const distance = 60 + Math.random() * 80;
+      const dx = Math.cos(angle) * distance;
+      const dy = Math.sin(angle) * distance;
+      p.style.left = x + "px";
+      p.style.top = y + "px";
+      p.style.background = colors[Math.floor(Math.random() * colors.length)];
+      p.style.setProperty("--dx", dx + "px");
+      p.style.setProperty("--dy", dy + "px");
+      document.body.appendChild(p);
+      setTimeout(() => p.remove(), 1000);
+    }
+  }
+</script>
+
+</body>
+</html>
