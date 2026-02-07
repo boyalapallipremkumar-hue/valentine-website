@@ -1,33 +1,145 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width,initial-scale=1.0">
-    <title>Valentine Surprise</title>
-    <style>
-        body {
-            font-family: 'Comic Sans MS', cursive, sans-serif;
-            background: #ffccdc;
-            text-align: center;
-            padding: 60px;
-            color: #a60045;
-        }
-        h1 {
-            font-size: 42px;
-        }
-    </style>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Valentine Surprise 💖</title>
+<style>
+  body {
+    margin: 0; min-height: 100vh; overflow: hidden;
+    font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+    background: radial-gradient(circle at top, #ffd1dc, #ff7aa2);
+    color: #6b0030; display: grid; place-items: center;
+  }
+  .card {
+    background: rgba(255,255,255,0.95);
+    padding: 26px 22px 30px;
+    border-radius: 20px; text-align: center;
+    box-shadow: 0 12px 35px rgba(0,0,0,0.2);
+    max-width: 520px; width: calc(100% - 32px);
+    position: relative; z-index: 2;
+    animation: floatIn .6s ease-out;
+  }
+  @keyframes floatIn { from{transform:translateY(20px);opacity:0} to{transform:none;opacity:1} }
+  h1 { margin: 0 0 6px; }
+  .names { font-size: 28px; margin: 8px 0 12px; }
+  .msg { font-size: 18px; margin-bottom: 18px; }
+  .buttons { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; }
+  button {
+    padding: 12px 18px; border-radius: 12px; border: none; font-size: 18px; cursor: pointer;
+    font-weight: 700;
+  }
+  #yes { background: #2ecc71; color: #0b3d1e; }
+  #no { background: #ff4d6d; color: #fff; position: relative; }
+  .music {
+    position: fixed; right: 12px; bottom: 12px; z-index: 3;
+    background: rgba(255,255,255,0.85); border-radius: 999px; padding: 10px 14px;
+    box-shadow: 0 6px 18px rgba(0,0,0,0.2); cursor: pointer; user-select: none;
+  }
+
+  /* Floating hearts */
+  .heart {
+    position: absolute; bottom: -40px; font-size: 20px; opacity: 0.8;
+    animation: float 8s linear infinite;
+  }
+  @keyframes float {
+    0% { transform: translateY(0) translateX(0) rotate(0deg); opacity: 0; }
+    10% { opacity: .8; }
+    100% { transform: translateY(-110vh) translateX(40px) rotate(360deg); opacity: 0; }
+  }
+
+  /* Confetti */
+  .confetti {
+    position: fixed; top: -10px; width: 8px; height: 14px; opacity: .9;
+    animation: fall 3s linear forwards;
+  }
+  @keyframes fall {
+    to { transform: translateY(110vh) rotate(720deg); }
+  }
+</style>
 </head>
 <body>
 
-<h1>💖 Happy Valentine’s Day! 💖</h1>
-<p id="names"></p>
+<div class="card">
+  <h1>💖 Happy Valentine’s Day! 💖</h1>
+  <div class="names" id="names"></div>
+  <div class="msg" id="msg"></div>
+
+  <div class="buttons">
+    <button id="yes">Yes 😍</button>
+    <button id="no">No 🙈</button>
+  </div>
+</div>
+
+<div class="music" id="musicBtn">🔊 Music: Off</div>
+<audio id="bgm" loop>
+  <!-- Royalty-free soft music sample -->
+  <source src="https://cdn.pixabay.com/download/audio/2022/10/03/audio_1c1a8b6b2e.mp3?filename=romantic-ambient-121245.mp3" type="audio/mpeg">
+</audio>
 
 <script>
-    const params = new URLSearchParams(location.search);
-    const from = params.get('from') || 'Someone';
-    const to = params.get('to') || 'You';
+const params = new URLSearchParams(location.search);
+const from = decodeURIComponent(params.get("from") || "Someone");
+const to = decodeURIComponent(params.get("to") || "You");
+const msg = decodeURIComponent(params.get("msg") || "Will you be my Valentine? 💖");
 
-    document.getElementById('names').innerText = `${from} ❤️ ${to}`;
+document.getElementById("names").innerText = `${from} ❤️ ${to}`;
+document.getElementById("msg").innerText = msg;
+
+// Floating hearts
+function spawnHeart() {
+  const h = document.createElement("div");
+  h.className = "heart";
+  h.style.left = Math.random() * 100 + "vw";
+  h.style.animationDuration = (6 + Math.random() * 6) + "s";
+  h.textContent = ["💖","💘","💝","💗","💓"][Math.floor(Math.random()*5)];
+  document.body.appendChild(h);
+  setTimeout(() => h.remove(), 12000);
+}
+setInterval(spawnHeart, 500);
+
+// Yes / No behavior
+const noBtn = document.getElementById("no");
+noBtn.addEventListener("mouseenter", () => {
+  const x = Math.random() * (window.innerWidth - 100);
+  const y = Math.random() * (window.innerHeight - 50);
+  noBtn.style.position = "fixed";
+  noBtn.style.left = x + "px";
+  noBtn.style.top = y + "px";
+});
+
+document.getElementById("yes").addEventListener("click", () => {
+  launchConfetti();
+  alert("Yay! 💕 Best answer ever!");
+});
+
+// Confetti
+function launchConfetti() {
+  for (let i = 0; i < 120; i++) {
+    const c = document.createElement("div");
+    c.className = "confetti";
+    c.style.left = Math.random() * 100 + "vw";
+    c.style.background = ["#ff2f7a","#ffd166","#06d6a0","#4cc9f0","#b5179e"][Math.floor(Math.random()*5)];
+    c.style.animationDuration = (2 + Math.random()*2) + "s";
+    document.body.appendChild(c);
+    setTimeout(() => c.remove(), 4000);
+  }
+}
+
+// Music toggle
+const audio = document.getElementById("bgm");
+const btn = document.getElementById("musicBtn");
+let playing = false;
+btn.addEventListener("click", () => {
+  if (!playing) {
+    audio.play();
+    btn.textContent = "🔊 Music: On";
+  } else {
+    audio.pause();
+    btn.textContent = "🔊 Music: Off";
+  }
+  playing = !playing;
+});
 </script>
 
 </body>
