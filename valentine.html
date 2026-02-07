@@ -8,41 +8,97 @@
 <style>
   body {
     margin: 0;
+    min-height: 100vh;
+    overflow: hidden;
     font-family: Arial, sans-serif;
-    background: #ffe1e9;
+    background: linear-gradient(135deg, #ffb6c1, #ffd1dc);
     display: flex;
     align-items: center;
     justify-content: center;
-    height: 100vh;
     text-align: center;
   }
+
   .container {
-    background: #fff;
-    padding: 30px;
-    border-radius: 15px;
-    box-shadow: 0 7px 20px rgba(0,0,0,0.15);
+    background: rgba(255,255,255,0.95);
+    padding: 24px;
+    border-radius: 18px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.2);
     width: 90%;
     max-width: 420px;
+    z-index: 2;
+    animation: pop 0.5s ease-out;
   }
-  h1 { margin: 0 0 10px; font-size: 28px; color: #d60067; }
-  p { margin: 8px 0; font-size: 18px; color: #900040; }
 
-  #buttons button {
-    padding: 12px 16px;
-    margin: 10px 8px;
+  @keyframes pop {
+    from { transform: scale(0.9); opacity: 0; }
+    to { transform: scale(1); opacity: 1; }
+  }
+
+  h1 {
+    margin: 0 0 10px;
+    color: #d60067;
+  }
+
+  #names {
+    font-size: 22px;
+    margin-bottom: 10px;
+    color: #900040;
+    font-weight: bold;
+  }
+
+  .gif {
+    width: 180px;
+    max-width: 100%;
+    border-radius: 12px;
+    margin: 10px 0;
+  }
+
+  .buttons {
+    margin-top: 15px;
+  }
+
+  .buttons button {
+    padding: 12px 18px;
+    margin: 8px;
     border: none;
-    border-radius: 8px;
+    border-radius: 10px;
     font-size: 18px;
     cursor: pointer;
+    font-weight: bold;
   }
+
   #yes {
     background: #ff2f7a;
     color: #fff;
   }
+
   #no {
-    background: #ddd;
+    background: #ccc;
     color: #000;
     position: relative;
+  }
+
+  /* Floating hearts */
+  .heart {
+    position: absolute;
+    bottom: -40px;
+    font-size: 20px;
+    opacity: 0.8;
+    animation: float 8s linear infinite;
+    pointer-events: none;
+  }
+
+  @keyframes float {
+    0% { transform: translateY(0) translateX(0); opacity: 0; }
+    10% { opacity: 0.8; }
+    100% { transform: translateY(-110vh) translateX(40px); opacity: 0; }
+  }
+
+  .celebrate {
+    font-size: 22px;
+    color: #d60067;
+    margin-top: 12px;
+    font-weight: bold;
   }
 </style>
 </head>
@@ -50,40 +106,37 @@
 <body>
 
 <div class="container">
-  <h1 id="message">💘 Happy Valentine’s Day! 💘</h1>
-  <p id="names"></p>
+  <h1>💘 Happy Valentine’s Day! 💘</h1>
+  <div id="names"></div>
+
+  <img src="https://i.imgur.com/7QpVZ5F.png" alt="Cute hearts" class="gif">
+  <img id="mainGif" src="https://media.giphy.com/media/l0MYt5jPR6QX5pnqM/giphy.gif" alt="Cute gif" class="gif">
+
   <p>Will you be my Valentine? 💞</p>
 
-  <div id="buttons">
-    <button id="yes">Yes 😊</button>
-    <button id="no">No 😢</button>
+  <div class="buttons">
+    <button id="yes">Yes 😍</button>
+    <button id="no">No 🙈</button>
   </div>
+
+  <div id="result" class="celebrate"></div>
 </div>
 
 <script>
-  // Read URL params
+  // Read URL params: ?name=Prem&valentineName=Samhitha
   const params = new URLSearchParams(location.search);
-  const name1 = decodeURIComponent(params.get("name")|| "");
-  const name2 = decodeURIComponent(params.get("valentineName")|| "");
+  const name1 = decodeURIComponent(params.get("name") || "Someone");
+  const name2 = decodeURIComponent(params.get("valentineName") || "You");
 
-  // Show names
   document.getElementById("names").innerText = `${name1} ❤️ ${name2}`;
 
-  // No button moves randomly when hovered
-  const noBtn = document.getElementById("no");
-  noBtn.addEventListener("mouseover", function() {
-    const x = Math.random()* (window.innerWidth - 100);
-    const y = Math.random()* (window.innerHeight - 50);
-    noBtn.style.position = "fixed";
-    noBtn.style.left = x + "px";
-    noBtn.style.top = y + "px";
-  });
-
-  // Yes click response
-  document.getElementById("yes").addEventListener("click", function() {
-    alert("Yay! 💖 They said YES! 🎉");
-  });
-</script>
-
-</body>
-</html>
+  // Floating hearts
+  function spawnHeart() {
+    const h = document.createElement("div");
+    h.className = "heart";
+    h.textContent = ["💖","💘","💝","💗","💓"][Math.floor(Math.random() * 5)];
+    h.style.left = Math.random() * 100 + "vw";
+    h.style.animationDuration = (6 + Math.random() * 6) + "s";
+    h.style.fontSize = (16 + Math.random() * 24) + "px";
+    document.body.appendChild(h);
+    set
