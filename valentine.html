@@ -105,14 +105,9 @@
 </div>
 
 <script>
-  // Read URL params: ?name=Prem&valentineName=Samhitha
-  const params = new URLSearchParams(window.location.search);
-
-  const name1Param = params.get("name");
-  const name2Param = params.get("valentineName");
-
-  const name1 = name1Param ? decodeURIComponent(name1Param) : "Me";
-  const name2 = name2Param ? decodeURIComponent(name2Param) : "My Wifey ❤️";
+  // 🔴 HARDCODED NAMES (change these if you want)
+  const name1 = "Prem";
+  const name2 = "My Wifey ❤️";
 
   // Show both names on top
   document.getElementById("names").innerText = name1 + " ❤️ " + name2;
@@ -146,7 +141,7 @@
     noBtn.textContent = noTexts[noIndex];
   }
 
-  // Desktop + mobile support
+  // Desktop + mobile
   noBtn.addEventListener("mouseenter", moveNo);
   noBtn.addEventListener("click", moveNo);
 
