@@ -5,46 +5,112 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 <title>Valentine Link Generator 💖</title>
 <style>
+  * { box-sizing: border-box; }
+
   body {
     margin: 0; min-height: 100vh; display: grid; place-items: center;
     font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
     background: linear-gradient(135deg, #ff9a9e, #fad0c4);
     color: #5b0028;
+    padding: 16px;
   }
+
   .card {
-    background: rgba(255,255,255,0.9);
-    padding: 24px 20px 28px;
+    background: rgba(255,255,255,0.95);
+    padding: 22px;
     border-radius: 18px;
     box-shadow: 0 10px 30px rgba(0,0,0,0.15);
-    max-width: 420px; width: calc(100% - 32px);
+    max-width: 420px;
+    width: 100%;
     text-align: center;
     animation: pop 0.5s ease-out;
   }
-  @keyframes pop { from{transform:scale(.9);opacity:0} to{transform:scale(1);opacity:1} }
-  h1 { margin: 0 0 8px; }
-  p { margin: 0 0 16px; }
+
+  @keyframes pop {
+    from { transform: scale(.95); opacity: 0; }
+    to { transform: scale(1); opacity: 1; }
+  }
+
+  h1 {
+    margin: 0 0 8px;
+    font-size: 28px;
+  }
+
+  p.subtitle {
+    margin: 0 0 16px;
+    font-size: 16px;
+    opacity: 0.9;
+  }
+
   input, textarea, button {
-    width: 100%; padding: 12px; margin: 8px 0;
-    border-radius: 10px; border: 1px solid #d48aa8; font-size: 16px;
+    width: 100%;
+    font-size: 16px;
+    border-radius: 12px;
+    border: 1px solid #d48aa8;
+    margin: 8px 0;
   }
-  textarea { resize: vertical; min-height: 70px; }
+
+  input, textarea {
+    padding: 14px 16px;
+    outline: none;
+  }
+
+  textarea {
+    min-height: 90px;
+    resize: vertical;
+  }
+
   button {
-    background: #ff2f7a; color: #fff; border: none; cursor: pointer; font-weight: 600;
-    transition: transform .1s ease, box-shadow .1s ease;
+    padding: 14px 16px;
+    border: none;
+    cursor: pointer;
+    font-weight: 600;
+    background: #ff2f7a;
+    color: #fff;
     box-shadow: 0 6px 0 #c61e5f;
+    transition: transform .1s ease, box-shadow .1s ease, opacity .1s ease;
   }
-  button:active { transform: translateY(3px); box-shadow: 0 3px 0 #c61e5f; }
-  .row { display: flex; gap: 8px; }
-  .row button { flex: 1; }
-  .output { word-break: break-all; margin-top: 10px; }
-  .footer { opacity: .7; font-size: 13px; margin-top: 8px; }
+
+  button:active {
+    transform: translateY(3px);
+    box-shadow: 0 3px 0 #c61e5f;
+  }
+
+  .output-field {
+    width: 100%;
+    padding: 12px 14px;
+    margin-top: 10px;
+    border-radius: 12px;
+    border: 1px dashed #ff9bbd;
+    background: #fff0f5;
+    font-size: 14px;
+    font-style: italic;           /* Inclined text */
+    color: #7a0035;
+    word-break: break-all;
+  }
+
+  .row {
+    display: flex;
+    gap: 10px;
+    margin-top: 10px;
+  }
+
+  .row button {
+    flex: 1;
+  }
+
+  .footer {
+    opacity: .7;
+    font-size: 13px;
+    margin-top: 10px;
+  }
 </style>
 </head>
 <body>
 
 <div class="card">
   <h1>💌 Valentine Link Generator</h1>
-  <p>Create a cute, shareable Valentine page</p>
+  <p class="subtitle">Create a cute, shareable Valentine page</p>
 
   <input id="from" placeholder="Your name" />
   <input id="to" placeholder="Your Valentine’s name" />
@@ -52,7 +118,8 @@
 
   <button onclick="generate()">Generate Link</button>
 
-  <div class="output" id="out"></div>
+  <!-- Separate output field -->
+  <div id="out" class="output-field">Your generated link will appear here…</div>
 
   <div class="row">
     <button onclick="copyLink()">Copy Link</button>
@@ -73,15 +140,21 @@ function generate() {
   const to = encodeURIComponent(document.getElementById("to").value.trim());
   const msg = encodeURIComponent(document.getElementById("message").value.trim());
 
-  if (!from || !to) { alert("Please fill both names 🙂"); return; }
+  if (!from || !to) { 
+    alert("Please fill both names 🙂"); 
+    return; 
+  }
 
-  const url = `${location.origin}${basePath()}valentine.html?from=${from}&to=${to}&msg=${msg}`;
+  const url = `${location.origin}${basePath()}valentine.html?name=${from}&valentineName=${to}&msg=${msg}`;
   document.getElementById("out").innerText = url;
 }
 
 function copyLink() {
   const t = document.getElementById("out").innerText;
-  if (!t) return alert("Generate the link first!");
+  if (!t || t.startsWith("Your generated")) {
+    alert("Generate the link first!");
+    return;
+  }
   navigator.clipboard.writeText(t);
   alert("Link copied 💌");
 }
