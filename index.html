@@ -1,81 +1,99 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width,initial-scale=1.0">
-    <title>Valentine Link Generator</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            background: #ffe1e9;
-            color: #300018;
-            text-align: center;
-            padding: 40px;
-        }
-        input, button {
-            padding: 10px;
-            margin: 8px;
-            border-radius: 6px;
-            border: 1px solid #900040;
-        }
-        button {
-            background: #d60067;
-            color: #fff;
-            font-size: 16px;
-            cursor: pointer;
-        }
-        .output {
-            margin-top: 20px;
-        }
-    </style>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Valentine Link Generator 💖</title>
+<style>
+  body {
+    margin: 0; min-height: 100vh; display: grid; place-items: center;
+    font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+    background: linear-gradient(135deg, #ff9a9e, #fad0c4);
+    color: #5b0028;
+  }
+  .card {
+    background: rgba(255,255,255,0.9);
+    padding: 24px 20px 28px;
+    border-radius: 18px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+    max-width: 420px; width: calc(100% - 32px);
+    text-align: center;
+    animation: pop 0.5s ease-out;
+  }
+  @keyframes pop { from{transform:scale(.9);opacity:0} to{transform:scale(1);opacity:1} }
+  h1 { margin: 0 0 8px; }
+  p { margin: 0 0 16px; }
+  input, textarea, button {
+    width: 100%; padding: 12px; margin: 8px 0;
+    border-radius: 10px; border: 1px solid #d48aa8; font-size: 16px;
+  }
+  textarea { resize: vertical; min-height: 70px; }
+  button {
+    background: #ff2f7a; color: #fff; border: none; cursor: pointer; font-weight: 600;
+    transition: transform .1s ease, box-shadow .1s ease;
+    box-shadow: 0 6px 0 #c61e5f;
+  }
+  button:active { transform: translateY(3px); box-shadow: 0 3px 0 #c61e5f; }
+  .row { display: flex; gap: 8px; }
+  .row button { flex: 1; }
+  .output { word-break: break-all; margin-top: 10px; }
+  .footer { opacity: .7; font-size: 13px; margin-top: 8px; }
+</style>
 </head>
 <body>
 
-<h1>💌 Valentine Link Generator</h1>
+<div class="card">
+  <h1>💌 Valentine Link Generator</h1>
+  <p>Create a cute, shareable Valentine page</p>
 
-<p>Enter names below and create a personalized Valentine link ✨</p>
+  <input id="from" placeholder="Your name" />
+  <input id="to" placeholder="Your Valentine’s name" />
+  <textarea id="message" placeholder="Custom message (optional)">Will you be my Valentine? 💖</textarea>
 
-<input id="sender" type="text" placeholder="Your Name" />
-<br />
-<input id="recipient" type="text" placeholder="Your Valentine’s Name" />
-<br />
+  <button onclick="generate()">Generate Link</button>
 
-<button onclick="generateLink()">Generate Link</button>
+  <div class="output" id="out"></div>
 
-<div class="output">
-    <p id="link"></p>
+  <div class="row">
     <button onclick="copyLink()">Copy Link</button>
     <button onclick="copyMessage()">Copy Message</button>
+  </div>
+
+  <div class="footer">Share the link and make their day special ✨</div>
 </div>
 
 <script>
-    function generateLink() {
-        const from = encodeURIComponent(document.getElementById('sender').value.trim());
-        const to = encodeURIComponent(document.getElementById('recipient').value.trim());
+function basePath() {
+  const p = location.pathname;
+  return p.endsWith("index.html") ? p.replace("index.html","") : p.endsWith("/") ? p : p + "/";
+}
 
-        if (!from || !to) {
-            alert('Please fill both names 🙂');
-            return;
-        }
+function generate() {
+  const from = encodeURIComponent(document.getElementById("from").value.trim());
+  const to = encodeURIComponent(document.getElementById("to").value.trim());
+  const msg = encodeURIComponent(document.getElementById("message").value.trim());
 
-        const url = `${location.origin}${location.pathname.replace("index.html","")}valentine.html?to=${to}&from=${from}`;
-        document.getElementById('link').innerText = url;
-    }
+  if (!from || !to) { alert("Please fill both names 🙂"); return; }
 
-    function copyLink() {
-        const text = document.getElementById('link').innerText;
-        if (!text) return alert('No link to copy!');
-        navigator.clipboard.writeText(text);
-        alert('Link copied! 💌');
-    }
+  const url = `${location.origin}${basePath()}valentine.html?from=${from}&to=${to}&msg=${msg}`;
+  document.getElementById("out").innerText = url;
+}
 
-    function copyMessage() {
-        const from = document.getElementById('sender').value.trim();
-        const to = document.getElementById('recipient').value.trim();
-        const msg = `${from} ❤️ ${to} — Will you be my Valentine?`;
-        navigator.clipboard.writeText(msg);
-        alert('Message copied! 💖');
-    }
+function copyLink() {
+  const t = document.getElementById("out").innerText;
+  if (!t) return alert("Generate the link first!");
+  navigator.clipboard.writeText(t);
+  alert("Link copied 💌");
+}
+
+function copyMessage() {
+  const from = document.getElementById("from").value.trim();
+  const to = document.getElementById("to").value.trim();
+  const msg = document.getElementById("message").value.trim();
+  const text = `${from} ❤️ ${to}\n${msg}`;
+  navigator.clipboard.writeText(text);
+  alert("Message copied 💖");
+}
 </script>
 
 </body>
